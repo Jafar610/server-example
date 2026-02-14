@@ -1,0 +1,24 @@
+{
+  "name": "server-example",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/Jafar610/server-example#readme",
+  "bugs": {
+    "url": "https://github.com/Jafar610/server-example/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jafar610/server-example.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "apple-server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "mime-types": "^3.0.2"
+  }
+}
