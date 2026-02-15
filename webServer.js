@@ -1,5 +1,5 @@
-const http = require("http");
-const fs = require("fs");   
+// const http = require("http");
+// const fs = require("fs");   
 
 // const server = http.createServer((req, res)=>{
 //     res.write("Hi There \n");
@@ -35,27 +35,94 @@ const fs = require("fs");
 // })
 
 
-const server3 = http.createServer((req, res)=>{
-    let requestedUrl = req.url;
-    if(requestedUrl === '/'){
-        requestedUrl = '/index.html';
-    }
-    console.log(requestedUrl);
 
-    fs.readFile(`.${requestedUrl}`, (err, data)=>{
+
+// const server3 = http.createServer((req, res)=>{
+//     let requestedUrl = req.url;
+//     if(requestedUrl === '/'){
+//         requestedUrl = '/index.html';
+//     }
+//     console.log(requestedUrl);
+
+//     fs.readFile(`.${requestedUrl}`, (err, data)=>{
+//         if(err){
+//             res.writeHead(404, {'Content-Type': 'text/html'});
+//             res.write('<h1>Page Not Found</h1>');
+//             res.end();
+//         }
+//         else{
+//             res.writeHead(200, {'Content-Type': 'text/html'});
+//             res.write(data);
+//             res.end();
+//         }
+//     });
+// })
+
+// server3.listen(5005,()=>{
+//     console.log("Server is running");
+// });
+
+
+
+
+
+// const server4 = http.createServer((req, res)=>{
+//     res.end("hello world");
+// });
+
+
+// server4.listen(4004, (err)=>{
+//     if(err){
+//         console.error(err);
+//     }
+//     console.log("Your server is running.")
+// });
+
+const http = require("http");
+const fs = require("fs");
+
+const myServer = http.createServer((req, res)=>{
+    var path = req.url;
+    if(path === '/'){
+        path = '/index.html';
+    }
+
+    fs.readFile(`.${path}`, (err, data)=>{
         if(err){
-            res.writeHead(404, {'Content-Type': 'text/html'});
+            res.writeHead(404, {'Content-Type':'text/html'});
             res.write('<h1>Page Not Found</h1>');
             res.end();
         }
         else{
-            res.writeHead(200, {'Content-Type': 'text/html'});
+            res.writeHead(200, {'Content-Type':'text/html'});
             res.write(data);
             res.end();
         }
+        
     });
+});
+
+myServer.listen(1234, (err)=>{
+    if(err){
+        console.error(err);
+    }
+    console.log("Your server is running.");
 })
 
-server3.listen(5005,()=>{
-    console.log("Server is running");
-});
+
+
+
+
+
+//     if(path === '/'){
+//         res.write('<h1>Welcome to Home Page</h1>');
+//         res.end();
+//     }
+//     else if(path ==='/about'){
+//         res.write('<h1>Hello there welcome to About pages</h1>');
+//         res.end();
+//     }
+//     else{
+//         res.write('<h1> Page Not Found </h1>');
+//         res.end();
+//     }
