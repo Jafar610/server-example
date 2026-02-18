@@ -15,3 +15,50 @@ const connection = mysql.createConnection({
     password: '',
     database: 'testdb'
 });
+connection.connect((err)=>{
+    if(err){
+        console.log(err);
+    }
+    console.log('Connected to MySQL database');
+});
+
+
+server.get('/createdb', (req, res)=>{
+    const customer = `CREATE TABLE if not exists customers(
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        email VARCHAR(255) NOT NULL
+    )`;
+
+    const addres = `CREATE TABLE if not exists address(
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        customer_id INT NOT NULL,
+        address VARCHAR(255) NOT NULL,
+        FOREIGN KEY (customer_id) REFERENCES customers(id)
+    )`;
+
+    const company = `CREATE TABLE if not exists company(
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        address VARCHAR(255) NOT NULL,
+        customer_id INT NOT NULL,
+        FOREIGN KEY (customer_id) REFERENCES customers(id)
+    )`;
+
+    connection.query(customer, (err, results, fields)=>{
+        if(err){
+            console.log(err);
+        }
+    });
+    connection.query(addres, (err, results, fields)=>{
+        if(err){
+            console.log(err);  
+        }
+    });
+    connection.query(company, (err, results, fields)=>{
+        if(err){
+            console.log(err);  
+        }   
+    });
+    res.end('Database and tables created successfully');
+})
