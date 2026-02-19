@@ -22,7 +22,6 @@
 //     console.log('Connected to MySQL database');
 // });
 
-
 // server.get('/createdb', (req, res)=>{
 //     const customer = `CREATE TABLE if not exists customers(
 //         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -52,28 +51,38 @@
 //     });
 //     connection.query(addres, (err, results, fields)=>{
 //         if(err){
-//             console.log(err);  
+//             console.log(err);
 //         }
 //     });
 //     connection.query(company, (err, results, fields)=>{
 //         if(err){
-//             console.log(err);  
-//         }   
+//             console.log(err);
+//         }
 //     });
 //     res.end('Database and tables created successfully');
 // })
 
-
-const express = require('express');
-const mysql = require('mysql2');
-
+const express = require("express");
+const mysql = require("mysql2");
 
 const server = express();
 
+const connection = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "",
+  database: "Info",
+});
 
-server.listen(3022,(err)=>{
-    if(err){
-        console.log(err);
-    }
-    console.log('Your server is running on 3022');
-})
+connection.connect((err) => {
+  if (err) console.log(err);
+
+  console.log("It connected to database.");
+});
+
+server.listen(3022, (err) => {
+  if (err) {
+    console.log(err);
+  }
+  console.log("Your server is running on 3022");
+});
