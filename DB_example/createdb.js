@@ -80,6 +80,21 @@ connection.connect((err) => {
   console.log("It connected to database.");
 });
 
+server.get("/createTable", (req, res) => {
+  connection.query(
+    `CREATE TABLE if not exists customers(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+    )`,
+    (err, results, fields) => {
+      if (err) throw err;
+      console.log("table inserted successfully");
+    },
+  );
+
+  res.end('Table created successfuly');
+});
+
 server.listen(3022, (err) => {
   if (err) {
     console.log(err);
