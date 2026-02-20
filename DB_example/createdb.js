@@ -92,6 +92,22 @@ server.get("/createTable", (req, res) => {
     },
   );
 
+  connection.query(
+    `CREATE TABLE if not exists address(
+       customer_id INT(11) NOT NULL,
+       id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+       address VARCHAR(255) NOT NULL,
+       FOREIGN KEY (customer_id) REFERENCES customers(id)
+    )`,(err, results, fields)=>{
+      if(err) throw err;
+      console.log('table inserted.');
+    }
+  );
+
+  connection.query(
+    
+  )
+
   res.end('Table created successfuly');
 });
 
