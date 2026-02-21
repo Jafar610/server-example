@@ -216,6 +216,10 @@ server.post('/add-info',(req, res)=>{
       console.log(results);
     });
 
+    connection.query(insertCompany, [company, id],(err, results, fields)=>{
+      if(err)console.log(err);
+      console.log(results);
+    })
 
   });
 });
