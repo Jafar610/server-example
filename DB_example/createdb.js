@@ -130,14 +130,19 @@
 
 const express = require("express");
 const mysql = require("mysql2");
+const cors = require("cors");
 
 const server = express();
 
 server.use(
   express.urlencoded({
-    extended:true
-  })
-)
+    extended: true,
+  }),
+);
+
+server.use(express.json());
+
+server.use(cors());
 
 const connection = mysql.createConnection({
   host: "localhost",
@@ -164,7 +169,7 @@ server.get("/create-table", (req, res) => {
   )`,
     (err, results, fields) => {
       if (err) throw err;
-      res.end('Table Created')
+      res.end("Table Created");
     },
   );
 
@@ -174,11 +179,12 @@ server.get("/create-table", (req, res) => {
     address_name VARCHAR(255) NOT NULL,
     customer_id INT(11) NOT NULL,
     FOREIGN KEY (customer_id) REFERENCES customers(id)
-    )`,(err)=>{
-      if(err)throw err;
-      res.end('Table created');
-    }
-  )
+    )`,
+    (err) => {
+      if (err) throw err;
+      res.end("Table created");
+    },
+  );
 
   connection.query(
     `CREATE TABLE if not exists company(
@@ -186,40 +192,94 @@ server.get("/create-table", (req, res) => {
      company_name VARCHAR(255) NOT NULL,
      customer_id INT(11) NOT NULL,
      FOREIGN KEY (customer_id) REFERENCES customers(id)
-    )`,(err)=>{
-      if(err)throw err;
-      res.end('Table created');
-    }
+    )`,
+    (err) => {
+      if (err) throw err;
+      res.end("Table created");
+    },
   );
- 
 });
 
-server.post('/add-info',(req, res)=>{
+server.post("/add-info", (req, res) => {
   console.table(req.body);
-  const {customerName, address, company} = req.body;
-  let insertCustomer = 'INSERT INTO customers (customer_name) VALUES(?)';
-  let insertAddress = 'INSERT INTO address (address_name, customer_id) VALUES(?,?)';
-  let insertCompany = 'INSERT INTO company (company_name, customer_id) VALUES(?,?)';
+  const { customerName, address, company } = req.body;
+  let insertCustomer = "INSERT INTO customers (customer_name) VALUES(?)";
+  let insertAddress =
+    "INSERT INTO address (address_name, customer_id) VALUES(?,?)";
+  let insertCompany =
+    "INSERT INTO company (company_name, customer_id) VALUES(?,?)";
 
-  connection.query(insertCustomer,[customerName],(err, results, fields)=>{
-      if(err) throw err;
-      console.log('Data inserted')
-      console.log(results);
-      res.end('Data Inserted');
-
+  connection.query(insertCustomer, [customerName], (err, results, fields) => {
+    if (err) throw err;
+    console.log("Data inserted");
+    console.log(results);
+    res.end("Data Inserted");
 
     const id = results.insertId;
 
-    connection.query(insertAddress,[address, id], (err,results,fields)=>{
-      if(err) throw err;
-      console.log('data inserted');
+    connection.query(insertAddress, [address, id], (err, results, fields) => {
+      if (err) throw err;
+      console.log("data inserted");
       console.log(results);
     });
 
-    connection.query(insertCompany, [company, id],(err, results, fields)=>{
-      if(err)console.log(err);
+    connection.query(insertCompany, [company, id], (err, results, fields) => {
+      if (err) console.log(err);
       console.log(results);
-    })
-
+    });
   });
 });
+
+server.get("/customers-info", (req, res) => {
+  connection.query(
+    `SELECT * FROM customers JOIN address JOIN company ON customers.id=address.customer_id AND customers.id = company.customer_id`,
+    (err, results, fields) => {
+      if (err) console.log(err);
+      console.log(fields);
+      res.send(results);
+    },
+  );
+});
+
+server.put("/update", (req, res) => {
+  const { newName, id } = req.body;
+  connection.query(
+    `UPDATE customers set customer_name = (?) where id = (?)`,
+    [newName, id],
+    (err, results) => {
+      if (err) console.log(err);
+      console.log(results.affectedRows + "record(s) updated");
+      res.send(results);
+    },
+  );
+});
+
+server.delete('/delete-customer',(req, res)=>{
+  const {id} = req.body;
+  connection.query(
+    `DELETE FROM address WHERE customer_id = (?)`,
+    [id],
+    (err, results)=>{
+      if(err)throw err;
+      console.log(results.affectedRows + ' record(s) deleted.')
+    }
+  );
+
+  connection.query(
+    `DELETE FROM company WHERE customer_id =(?) `,
+    [id],
+    (err, results)=>{
+      if(err)throw err;
+      console.log(results.affectedRows + " record(s) deleted");
+    }
+  );
+
+  connection.query(
+    `DELETE FROM customers WHERE id = (?)`,
+    [id],
+    (err, results)=>{
+      if(err)throw err;
+      console.log(results.affectedRows + ' record(s) deleted.')
+    }
+  );
+})
