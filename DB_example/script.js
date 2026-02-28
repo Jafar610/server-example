@@ -48,8 +48,8 @@ function listCustomers() {
         usersDiv.innerHTML += `
 				<div class="row">
 					<h2 class="col-2">${customer.id}</h2>
-					<h2 class="col-4">${customer.customer_name}</h2>
-					<h2 class="col-3">${customer.address_name}</h2>
+					<h2 class="col-4">${customer.name}</h2>
+					<h2 class="col-3">${customer.address}</h2>
 					<h2 class="col-3">${customer.company_name}</h2>
 				</div>
 				<hr>`;
