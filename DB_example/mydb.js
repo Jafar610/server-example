@@ -106,6 +106,38 @@ server.get("/customers-info", (req, res) => {
   );
 });
 
+server.put('/update', (req, res)=>{
+    console.log(req.body);
+    const {id, newName} = req.body;
+
+    connection.query(`UPDATE customers SET name = ? WHERE id = ?`, [newName, id], (err, results)=>{
+        if(err) console.log(err);
+        console.table(results);
+        res.end("Data updated successfully");
+    })
+    
+});
+
+server.delete('/delete-customer', (req, res)=>{
+    console.log(req.body);
+    const {id} = req.body;
+    connection.query(`DELETE FROM address WHERE customer_id = ?`, [id], (err, results)=>{
+        if(err) console.log(err);
+        console.table(results);
+        console.log('data deleted successfully');
+    });
+    connection.query(`DELETE FROM company WHERE customer_id = ?`, [id], (err,results)=>{
+        if(err) console.log(err);
+        console.table(results);
+    })
+    connection.query(`DELETE FROM customers WHERE id =?`, [id], (err, results)=>{
+        if(err) console.log(err);
+        console.table(results);
+        res.end('data deleted successfully')
+    });
+});
+
+
 server.listen(1234, (err) => {
   if (err) throw err;
   console.log("Your server is running on 1234");
